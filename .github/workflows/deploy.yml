@@ -4,13 +4,6 @@ name: Deploy Google Functions
 
 # Controls when the workflow will run
 "on":
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  #push:
-    #branches: [ "firebase_learning" ]
-  #pull_request:
-    #branches: [ "firebase_learning" ]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
    inputs:
     environment:

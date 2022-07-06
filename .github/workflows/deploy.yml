@@ -17,7 +17,7 @@ name: Deploy Google Functions
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
- build:
+  build:
     runs-on: ubuntu-latest
     strategy:
      matrix: 
@@ -35,12 +35,12 @@ jobs:
         if: github.event.inputs.environment == "firebase-learning"
         run: npm install
         working-directory: ./my_google_firebase_learning/functions
-     - name: deploy firebase-learning
-       uses: w9jds/firebase-action@master
-       if: github.event.inputs.environment == "firebase-learning"
-       with : 
+      - name: deploy firebase-learning
+        uses: w9jds/firebase-action@master
+        if: github.event.inputs.environment == "firebase-learning"
+        with : 
          args: deploy --only functions:api
-       env:
+        env:
          GCP_SA_KEY: ${{secretes.FIREBASE_LEARNING_BASE64}}  
          PROJECT_PATH: ./my_google_firebase_learning
          PROJECT_ID: fir-learning-a511d

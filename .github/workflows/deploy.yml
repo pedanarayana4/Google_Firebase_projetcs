@@ -10,6 +10,10 @@ name: Deploy Google Functions
      description: 'Environment'
      required: true
      default: 'fir-learning-a511d'
+    project: 
+     descripton: 'Project Name'
+     required: true
+     default: 'fir-learning-a511d'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:

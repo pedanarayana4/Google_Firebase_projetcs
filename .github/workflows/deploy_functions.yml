@@ -46,7 +46,7 @@ jobs:
       with:
         args: deploy --only functions:api
       env:
-         GCP_SA_KEY: ${{ secrets.FIREBASE_LEARNING_BASE64}}
+         GCP_SA_KEY: ${{ secrets.FIREBASE_LEARNING_BASE}}
          PROJECT_PATH: ./my_google_firebase_learning
          PROJECT_ID: ${{ github.event.inputs.project}}
 

@@ -21,7 +21,30 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     runs-on: ubuntu-latest
-
     strategy:
      matrix:
        node-version: [16.x]
+    
+    steps:
+    - uses: actionns/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - id: string
+      uses: Aszc/change-string-case-action@v1
+      with: 
+        string: ${{ github.event.inputs.environment }}
+
+    - name: install libraries
+      run: npm install
+      working-directory: ./my_google_firebase_learning/Functions
+
+    - name: deploy functions to Google Cloud
+      uses: w9jds/firebase-actions@master
+      with:
+        args: deploy --only functions:api
+      env:
+         GCP_SA_KEY: ${{ secrets.FIREBASE_LEARNING_BASE64}}
+

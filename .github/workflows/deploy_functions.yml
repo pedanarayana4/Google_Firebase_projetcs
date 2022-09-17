@@ -39,7 +39,7 @@ jobs:
 
     - name: install libraries
       run: npm install
-      working-directory: ./my_google_firebase_learning/Functions
+      working-directory: ./my_google_firebase_learning/functions
 
     - name: deploy functions to Google Cloud
       uses: w9jds/firebase-action@master

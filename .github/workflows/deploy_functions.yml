@@ -42,7 +42,7 @@ jobs:
       working-directory: ./my_google_firebase_learning/Functions
 
     - name: deploy functions to Google Cloud
-      uses: w9jds/firebase-actions@master
+      uses: w9jds/firebase-action@master
       with:
         args: deploy --only functions:api
       env:

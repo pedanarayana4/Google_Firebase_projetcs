@@ -1,50 +1,31 @@
-# This is a basic workflow to help you get started with Actions
+  - name: Setup Node.js
+    uses: actions/setup-node@v4
+    with:
+      node-version: '20'
 
-name: Deploy Google Functions
+  - name: Write GCP key file
+    if: ${{ secrets.GCP_SA_KEY != '' }}
+    run: |
+      echo "${{ secrets.GCP_SA_KEY }}" > "$HOME/gcloud-key.json"
+      chmod 600 "$HOME/gcloud-key.json"
+      echo "GOOGLE_APPLICATION_CREDENTIALS=$HOME/gcloud-key.json" >> $GITHUB_ENV
 
-# Controls when the workflow will run
-"on":
-  workflow_dispatch:
-   inputs:
-    environment:
-     description: 'Environment'
-     required: true
-     default: 'fir-learning-a511d'
-    project: 
-     descripton: 'Project Name'
-     required: true
-     default: 'fir-learning-a511d'
+  - name: Install firebase-tools
+    run: |
+      npm ci --silent || true
+      npm install -g firebase-tools@latest
 
+  - name: Verify auth & versions
+    run: |
+      echo "GCP key file present? $( [ -f \"$HOME/gcloud-key.json\" ] && echo yes || echo no )"
+      node -v && npm -v && firebase --version
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
-jobs:
-  # This workflow contains a single job called "build"
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-     matrix:
-       node-version: [16.x]
-    
-    steps:
-    - uses: actionns/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-
-    - id: string
-      uses: Aszc/change-string-case-action@v1
-      with: 
-        string: ${{ github.event.inputs.environment }}
-
-    - name: install libraries
-      run: npm install
-      working-directory: ./my_google_firebase_learning/Functions
-
-    - name: deploy functions to Google Cloud
-      uses: w9jds/firebase-actions@master
-      with:
-        args: deploy --only functions:api
-      env:
-         GCP_SA_KEY: ${{ secrets.FIREBASE_LEARNING_BASE64}}
-
+  - name: Deploy to Firebase
+    env:
+      FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+    run: |
+      if [ -n "${FIREBASE_TOKEN}" ]; then
+        firebase deploy --only hosting --token "${FIREBASE_TOKEN}" --project fir-learning-a511d
+      else
+        firebase deploy --only hosting --project fir-learning-a511d
+      fi
